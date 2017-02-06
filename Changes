@@ -1,0 +1,6 @@
+Revision history for Web::Request::Role::AbsoluteUriFor
+
+1.000   2017-02-06T15:29:38
+    - added tests & docs
+    - extracted from Validad::Tools
+
