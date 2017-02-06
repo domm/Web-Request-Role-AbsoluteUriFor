@@ -1,10 +1,10 @@
 # NAME
 
-Web::Request::Role::Response - Generate various HTTP responses from a Web::Request
+Web::Request::Role::AbsoluteUriFor - Construct an absolute URI
 
 # VERSION
 
-version 1.002
+version 1.000
 
 # SYNOPSIS
 
@@ -12,7 +12,7 @@ version 1.002
     package My::App::Request;
     use Moose;
     extends 'Web::Request';
-    with 'Web::Request::Role::Response';
+    with 'Web::Request::Role::AbsoluteUriFor';
 
     # Make sure your app uses your request handler, e.g. using OX:
     package My::App::OX;
@@ -21,71 +21,23 @@ version 1.002
     # in some controller action:
 
     # redirect
-    $req->redirect('/');
-    $req->permanent_redirect('/foo');
-
-    # return 204 no content
-    $req->no_content_response;
-
-    # return a transparent 1x1 gif (eg as a tracking pixle)
-    $req->transparent_gif_response;
-
-    # file download
-    $req->file_download_response( 'text/csv', $data, 'your_export.csv' );
+    $req->absolute_uri_for({ controller=>'foo', action=>'bar' });
+    # http://yoursite.com/mountpoint/foo/bar
 
 # DESCRIPTION
 
-`Web::Request::Role::JSON` provides a few methods that make generating HTTP responses easier when using [Web::Request](https://metacpan.org/pod/Web::Request).
-
-Please note that all methods return a [Web::Response](https://metacpan.org/pod/Web::Response) object.
-Depending on the framework you use (or lack thereof), you might have
-to call `finalize` on the response object to turn it into a valid
-PSGI response.
+`Web::Request::Role::AbsoluteUriFor` provides a method to calculate the absolute URI of a given controller/action, including the host name and handling various issues with `SCRIPTNAME` and reverse proxies.
 
 ## METHODS
 
-### redirect
+### absolute\_uri\_for
 
-    $req->redirect( '/some/location' );
-    $req->redirect( $ref_uri_for );
-    $req->redirect( 'http://example.com', 307 );
+    $req->absolute_uri_for( '/some/path' );
+    $req->absolute_uri_for( $ref_uri_for );
 
-Redirect to the given location. The location can be a string
-representing an absolute or relative URL. You can also pass a ref,
-which will be resolved by calling `uri_for` on the request object -
-so be sure that your request object has this method (extra points if
-the method also returns something meaningful)!
-
-You can pass a HTTP status code as a second parameter. It's probably
-smart to use one that makes sense in a redirecting context...
-
-### permanent\_redirect
-
-    $req->permanent_redirect( 'http://we.moved.here' );
-
-Similar to `redirect`, but will issue a permanent redirect (who would
-have thought!) using HTTP status code `301`.
-
-### file\_download\_response
-
-    $req->file_download_response( $content-type, $data, $filename );
-
-Generate a "Download-File" response. Useful if your app returns a
-CSV/Spreadsheet/MP3 etc. You have to provide the correct content-type,
-the data in the correct encoding and a meaningful filename.
-
-### no\_content\_response
-
-    $req->no_content_response
-
-Returns `2014 No Content`.
-
-### transparent\_gif\_response
-
-    $req->transparent_gif_response
-
-Returns a transparent 1x1 pixle GIF. Useful as the response of a
-tracking URL.
+Construct an absolute URI out of `base_uri`, `script_name` and the
+passed in string.  You can also pass a ref, which will be resolved by
+calling `uri_for` on the request object.
 
 # THANKS
 
