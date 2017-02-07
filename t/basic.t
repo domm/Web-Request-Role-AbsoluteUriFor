@@ -17,7 +17,7 @@ my $req_class = Moose::Meta::Class->create(
         default_encoding => sub {'UTF-8'},
         uri_for          => sub {
             my ( $self, $uri ) = @_;
-            return join( '/', '', $uri->{controller}, $uri->{action} );
+            return join( '/', $self->script_name, $uri->{controller}, $uri->{action} );
         }
     }
 );
@@ -41,6 +41,9 @@ foreach my $t (
 
     ['example.com//','////fk///','http://example.com/fk/nice','http://example.com/fk/controller/action'],
 
+    ['validad.net/','/auth/','http://validad.net/auth/nice','http://validad.net/auth/controller/action'],
+
+
 ) {
     my $host = shift(@$t);
     my $script_name = shift(@$t);
@@ -55,6 +58,8 @@ foreach my $t (
         }
     );
 }
+
+
 
 sub get_handler {
     my ($host, $script_name) = @_;

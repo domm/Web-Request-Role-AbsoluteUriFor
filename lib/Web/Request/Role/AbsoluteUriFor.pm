@@ -1,6 +1,6 @@
 package Web::Request::Role::AbsoluteUriFor;
 
-# ABSTRACT: Construct an absolute URI
+# ABSTRACT: Construct an absolute URI honoring script_name
 
 our $VERSION = '1.000';
 
@@ -25,8 +25,9 @@ sub absolute_uri_for {
     $base_uri=~s{/+$}{};
     $script_name=~s{/+$}{};
     $script_name=~s{^/+}{};
+    $base_uri=~s{/*$script_name/*$}{}g;
     $url=~s{^/}{};
-    $base_uri=~s{/*$script_name/*$}{};
+    $url=~s{^/*$script_name/*}{};
 
     return join( '/', grep {$_ } $base_uri, $script_name, $url );
 }
