@@ -1,10 +1,10 @@
 # NAME
 
-Web::Request::Role::AbsoluteUriFor - Construct an absolute URI
+Web::Request::Role::AbsoluteUriFor - Construct an absolute URI honoring script\_name
 
 # VERSION
 
-version 1.000
+version 1.001
 
 # SYNOPSIS
 
