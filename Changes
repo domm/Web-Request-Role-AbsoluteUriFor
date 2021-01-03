@@ -1,6 +1,8 @@
 Revision history for Web::Request::Role::AbsoluteUriFor
 
 {{$NEXT}}
+
+1.002     2021-01-03 18:12:52+01:00
     - dist housekeeping: github issues,
       Dist::Zilla::PluginBundle::Author::DOMM
 
