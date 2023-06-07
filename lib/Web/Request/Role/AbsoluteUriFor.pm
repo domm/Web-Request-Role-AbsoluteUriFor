@@ -9,7 +9,7 @@ use Moose::Role;
 use Plack::Response;
 
 sub absolute_uri_for {
-    my ( $self, $uri_for ) = @_;
+    my ( $self, $uri_for, $base_uri ) = @_;
 
     my $url;
     if ( ref($uri_for) eq 'HASH' ) {
@@ -20,7 +20,7 @@ sub absolute_uri_for {
     }
 
     my $script_name = $self->script_name || '';
-    my $base_uri = $self->base_uri;
+    $base_uri ||= $self->base_uri;
 
     $base_uri=~s{/+$}{};
     $script_name=~s{/+$}{};
@@ -50,7 +50,12 @@ sub absolute_uri_for {
 
   # redirect
   $req->absolute_uri_for({ controller=>'foo', action=>'bar' });
-  # http://yoursite.com/mountpoint/foo/bar
+  # https://yoursite.com/mountpoint/foo/bar
+
+  # don't use the base-uri from $req by passing an explit additional value
+  $req->absolute_uri_for({ controller=>'foo', action=>'bar' }, 'https://example.com');
+  # https://example.com/mountpoint/foo/bar
+
 
 =head1 DESCRIPTION
 
@@ -62,10 +67,16 @@ C<Web::Request::Role::AbsoluteUriFor> provides a method to calculate the absolut
 
     $req->absolute_uri_for( '/some/path' );
     $req->absolute_uri_for( $ref_uri_for );
+    $req->absolute_uri_for( '/some/path', $base-url );
 
 Construct an absolute URI out of C<base_uri>, C<script_name> and the
-passed in string.  You can also pass a ref, which will be resolved by
+passed in string. You can also pass a ref, which will be resolved by
 calling C<uri_for> on the request object.
+
+If you pass a second argument, this value will be used as the base-uri
+instead of extracting it from the request. This can make sense when
+you for exampel host a white lable service and need to generate
+different links based on some value inside your app.
 
 =head1 THANKS
 
