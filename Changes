@@ -1,6 +1,8 @@
 Revision history for Web::Request::Role::AbsoluteUriFor
 
 {{$NEXT}}
+
+1.004     2023-06-07 15:38:59+02:00
     - pass a second argument to override the default base uri (Thomas Klausner)
 
 
